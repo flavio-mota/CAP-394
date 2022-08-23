@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>index</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Coleta e tratamento dos dados</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -14579,7 +14579,29 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Projeto-da-Disciplina-CAP394---Introdu%C3%A7%C3%A3o-%C3%A0-Ci%C3%AAncia-de-Dados"><span>Projeto da Disciplina CAP394 - Introdu&#231;&#227;o &#224; Ci&#234;ncia de Dados</span><a class="anchor-link" href="#Projeto-da-Disciplina-CAP394---Introdu%C3%A7%C3%A3o-%C3%A0-Ci%C3%AAncia-de-Dados">&#182;</a></h1><hr style="border:2px solid #0077b9;">
+<h1 id="Coletando-e-tratando-os-dados"><span>Coletando e tratando os dados</span><a class="anchor-link" href="#Coletando-e-tratando-os-dados">&#182;</a></h1><hr style="border:2px solid #0077b9;">
+
+<p><br/></p>
+<div style="text-align: center;font-size: 90%;">
+    Autor: Flávio Belizário da Silva Mota
+    <br/><br/>
+    Instituto Nacional de Pesquisas Espaciais (INPE)
+    <br/>
+    Avenida dos Astronautas, 1758, Jardim da Granja, São José dos Campos, SP 12227-010, Brazil
+    <br/><br/>
+    Contato: <a href="mailto:flavio.belizario.mota@gmail.com">flavio.belizario.mota@gmail.com</a>
+    <br/>
+    Professor: Rafael Santos
+</div><p><br/></p>
+<div style="text-align: justify;  margin-left: 25%; margin-right: 25%;">
+<b>Objetivo.</b> Esse caderno Jupyter tem como objetivo apresentar a etapa de coleta dos dados para o projeto da disciplina CAP394 - Introdução à Ciência de Dados. Os dados são provenientes do projeto CRISIS NLP e foram coletados utilizando publicações do Twitter referentes à pandemia de COVID-19. O conjunto contém informações geolocalizadas a respeito da origem da publicação e, se no corpo da publicação existem referências a outros locais, também são apresentadas as informações sobre esses locais. Esses dados são disponibilizados em formato json e podem ser baixados em arquivos que representam as publicações diárias. Nessa etapa de coleta, foram consideradas publicações feitas no Brasil.
+</div><p><br/></p>
+<div style="text-align: center;font-size: 90%;">
+    <b>Os dados podem ser encontrados em:</b>
+    <div style="margin-left: 10px; margin-right: 10px">
+    https://crisisnlp.qcri.org/covid19
+    </div>
+</div>
 </div>
 </div>
 </div>
@@ -14590,11 +14612,989 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Essa página contém os cadernos jupyter utilizados para a elaboração do projeto da disciplina CAP394 - Introdução à Ciência de Dados do programa de Computação Aplicada do Instituto Nacional de Pesquisas Espaciais (INPE). Os cadernos foram organizados em "Coleta e tratamento de dados" e "Análise dos dados", de forma a facilitar o entendimento da abordagem utilizada. Os dados utilizados nesse projeto são provenientes do grupo CRISIS NLP e foram coletados utilizando publicações do Twitter referentes à pandemia de COVID-19.
-<br>
-<a href="/coleta">Coleta e tratamento de dados</a>
-<br>
-<a href="/analise">Análise dos dados</a></p>
+<h2 id="O-conjunto-de-dados">O conjunto de dados<a class="anchor-link" href="#O-conjunto-de-dados">&#182;</a></h2><hr style="border:2px solid #0077b9;">
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<div>O conjunto de dados, chamado de GeoCoV19, foi elaborado através da coleta de dados do Twitter e contém mais de 524 milhões de <i>tweets</i> multilíngues coletados até 1º de maio de 2020. O conjunto contém cerca de 378 mil tweets com <i>geotags</i> e 5,4 milhões de <i>tweets</i> com informações sobre o local. Foram extraídos topônimos a partir do campo de localização do usuário e do conteúdo do <i>tweet</i> e essa informação foi transformada para geolocalizações, como país, estado ou cidade. Utilizando essa abordagem, 297 milhões de <i>tweets</i> foram associados a geolocalização usando o campo de localização do usuário e 452 milhões de <i>tweets</i> usando o conteúdo do <i>tweet</i>.</div><div>Os dados com informações geolocalizadas estão disponíveis para <i>download</i> em <a>https://crisisnlp.qcri.org/covid19</a> no formato <i>.zip</i>.
+
+<figure>
+    <img src='images/geo-download.png' style='display: block; margin-left: auto; margin-right: auto;'/>
+    <figcaption style='text-align: center;'>Figura 1 - Seção de download dos arquivos.</figcaption>
+</figure> <br/>
+
+Cada arquivo <i>.zip</i> contém um JSON com os <i>tweets</i> de um dia. Para coletar todas as publicações, é necessário baixar cada arquivo individualmente, por dia.</div><p><figure>
+    <img src='images/geo-download-datas.png' style='max-width:400px; max-height:400px; width: auto; height: auto; display: block; margin-left: auto; margin-right: auto;'/>
+    <figcaption style='text-align: center;'>Figura 2 - Seleção do arquivo com tweets do dia.</figcaption>
+</figure> <br/></p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Automatizando-a-coleta-dos-dados">Automatizando a coleta dos dados<a class="anchor-link" href="#Automatizando-a-coleta-dos-dados">&#182;</a></h2><hr style="border:2px solid #0077b9;">
+
+<div>Realizar a coleta dessas publicações manualmente seria extremamente trabalhoso. Sendo assim, utilizaremos os códigos a seguir para automatizar essa coleta, construindo ao final um único arquivo JSON com as publicações do Brasil.</div>
+<br/>
+<div> <b>Mas de que forma faremos isso, se é preciso selecionar o arquivo que queremos baixar?</b> 
+<br/> Inspecionando a página do projeto é possível descobrir que ao selecionar o botão de <i>download</i>, uma função é executada:
+</div>
+<br/>
+<figure>
+    <img src="images/insp-geo-download.png" style='max-width:700px; max-height:600px; width: auto; height: auto; display: block; margin-left: auto; margin-right: auto;'/>
+    <figcaption style='text-align: center;'>Figura 3 - Inspecionando o botão de download.</figcaption>
+</figure>
+
+<br/>
+<div>
+    Descobrimos que a função <code>geo_pass_selected()</code> é chamada quando selecionamos o arquivo que queremos baixar. Inspecionando os arquivos fonte da página, conseguimos identificar o que essa função faz:
+</div>
+<br/>
+<figure>
+    <img src="images/insp-geo-pass.png" style='max-width:700px; max-height:600px; width: auto; height: auto; display: block; margin-left: auto; margin-right: auto;'/>
+    <figcaption style='text-align: center;'>Figura 4 - Identificando a função <code>geo_pass_selected()</code>.</figcaption>
+</figure>
+<br/>
+<div>
+    Podemos notar que a função constrói um nome para o arquivo a ser baixado concatenando "geo_" e ".zip" a um valor que é obtido do elemento de seleção da página. Podemos inspecionar esse elemento para entender o que são esses valores:
+</div>
+<br/>
+<figure>
+    <img src="images/insp-geo-dates.png" style='max-width:900px; max-height:800px; width: auto; height: auto; display: block; margin-left: auto; margin-right: auto;'/>
+    <figcaption style='text-align: center;'>Figura 5 - Inspecionando o componente de seleção do arquivo.</figcaption>
+</figure>
+<br/>
+<div>
+    Analisando o código javascript acima, podemos notar que os valores utilizados para preencher as opções do componente de seleção são gerados através de um laço de repetição que itera de uma data de início (01/02/2020) até uma data de fim (01/05/2020). Dessa forma, o nome do arquivo a ser baixado tem o formato "geo_2020-02-01.zip", por exemplo. A função, em seguida, concatena uma <i>url</i> <code>/covid_data/geo_files/</code> ao nome do arquivo para então disponibilizar o <i>download</i>. O arquivo baixado é um <i>.zip</i>, sendo necessário extrair seu conteúdo, para poder manipular o arquivo JSON contendo as publicações do dia.
+</div>
+<br/>
+<div>
+    Analisando o número de publicações diárias na imagem a seguir, é possível notar um aumento a partir do dia 21 de fevereiro de 2020 e um segundo aumento a partir do dia 9 de março de 2020. Oficialmente, a Organização Mundial da Saúde (OMS) declarou estado de pandemia do novo Coronavírus em 11 de março de 2020 (<a href="https://g1.globo.com/bemestar/coronavirus/noticia/2020/03/11/oms-declara-pandemia-de-coronavirus.ghtml">G1</a>), onde também é possível notar um aumento no número de publicações.
+</div>
+<br/>
+<figure>
+    <img src="images/daily_tweet_distribution.png" style='max-width:900px; max-height:800px; width: auto; height: auto; display: block; margin-left: auto; margin-right: auto;'/>
+    <figcaption style='text-align: center;'>Figura 6 - Distribuição diária de publicações entre 1º de fevereiro e 1º de maio de 2020.</figcaption>
+</figure>
+<br/>
+<div>
+    Considerando o volume de dados no intervalo, visando tornar o processamento e análise processos menos custosos em termos de tempo e recurso, serão coletadas as publicações entre os dias 19 de fevereiro e 20 de março de 2020, contemplando assim um intervalo de 30 dias com publicações anteriores e posteriores ao decreto da OMS. 
+</div>
+<br/>
+<div>
+    De posse das informações apresentadas anteriormente, a automatização do processo de coleta dos dados pode ser descrito como as seguintes etapas:
+    <br/>
+    <ul>
+        <li>Criação de uma lista de datas no intervalo 19/02/2020 até 20/03/2020;</li>
+        <li>Iterar pelas datas dessa lista construindo o nome e <i>url</i> do arquivo a ser baixado;</li>
+        <li>Realizar o <i>download</i> do arquivo;</li>
+        <li>Extrair o conteúdo do arquivo <i>.zip</i> baixado;</li>
+        <li>Analisar o arquivo JSON buscando pelas publicações feitas no Brasil;</li>
+        <li>Gerar um novo arquivo JSON com essas publicações;</li>
+        <li>Apagar o arquivo baixado para que ele não ocupe muito espaço em disco (considerando que os arquivos em sua maioria ocupam mais de 100 MB).</li>
+    </ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Instalando-e-importando-as-bibliotecas">Instalando e importando as bibliotecas<a class="anchor-link" href="#Instalando-e-importando-as-bibliotecas">&#182;</a></h3><hr style="border:1px solid #0077b9;">
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Instalando a biblioteca <code>wget</code> para realizar o download dos arquivos:</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install wget
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Requirement already satisfied: wget in c:\users\flavi\anaconda3\lib\site-packages (3.2)
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Instalando a biblioteca <code>zipfile</code> para manipular os arquivos .zip:</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install zipfile36
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Requirement already satisfied: zipfile36 in c:\users\flavi\anaconda3\lib\site-packages (0.1.3)
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Importando as bibliotecas necessárias:</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">wget</span> <span class="c1"># biblioteca para download de arquivos</span>
+<span class="kn">import</span> <span class="nn">json</span> <span class="c1"># biblioteca para manipulação de JSON</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> <span class="c1"># biblioteca para manipulação dos dados</span>
+<span class="kn">import</span> <span class="nn">os</span> <span class="c1"># biblioteca para acessar recursos do sistema operacional</span>
+<span class="kn">import</span> <span class="nn">zipfile</span> <span class="c1"># biblioteca para manipular arquivos .zip</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span> <span class="c1"># bibilioteca para manipular datas</span>
+<span class="kn">import</span> <span class="nn">time</span> <span class="c1"># biblioteca para monitorar o tempo de execução</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Fluxo-para-carregamento-dos-dados">Fluxo para carregamento dos dados<a class="anchor-link" href="#Fluxo-para-carregamento-dos-dados">&#182;</a></h3><hr style="border:1px solid #0077b9;">
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Primeiro, vamos definir o intervalo de datas que será coletado. Para isso podemos empregar a bilblioteca <code>pandas</code>. As datas contemplam o intervalo de tempo entre 19 de fevereiro de 2020 e 20 de março de 2020.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">inicio</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;2020-02-19&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">fim</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;2020-03-20&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">datas_geradas</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">inicio</span><span class="p">,</span> <span class="n">fim</span><span class="p">)</span> <span class="c1"># gerando o intervalo</span>
+<span class="n">datas</span> <span class="o">=</span> <span class="n">datas_geradas</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span> <span class="c1"># obtendo uma lista com as datas</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Agora, iterando pela lista de datas, os arquivos correspondentes serão baixados empregando a biblioteca <code>wget</code>. Como estão em formato <i>.zip</i>, será necessário extrair o conteúdo desses arquivos. Utilizaremos a biblioteca <code>zipfile</code> para isso. Após a extração, é possível iterar pelas linhas do arquivo, obtendo o JSON correspondente de cada uma das linhas.
+&lt;/br&gt;&lt;/br&gt;
+Na estrutura do JSON existem 8 chaves, como descrito na documentação dos dados, disponível <a href="https://crisisnlp.qcri.org/covid_data/geocov19_readme.txt">aqui</a>. As chaves são:</p>
+<ul>
+    <li>tweet_id: o identificador único de um <i>tweet</i>;</li>
+    <li>created_at: data e hora da criação do <i>tweet</i>, no formato UTC;</li>
+    <li>user_id: identificador único do usuário que publicou o <i>tweet</i>;</li>
+    <li>geo_source: este campo pode ter um dos quatro valores: (i) <code>coordinates</code>, (ii) <code>place</code>, (iii) <code>user_location</code> ou (iv) <code>tweet_text</code>. O valor depende da disponibilidade desses campos. No entanto, a prioridade é dada aos campos mais precisos, quando disponíveis. A ordem de prioridade é <code>coordinates</code>, <code>place</code>, <code>user_location</code> e <code>tweet_text</code>. Por exemplo, quando um <i>tweet</i> tem coordenadas de GPS, o valor será "coordinates", mesmo que todos os outros campos de localização estejam presentes. Se um <i>tweet</i> não tiver informações de GPS, place (local) e user_location (localização informada pelo usuário), o valor desse campo será "tweet_text" se houver alguma menção a localidades no texto do <i>tweet</i>.;</li>
+</ul><p>As demais chaves podem ser preenchidas com uma estrutura chamada <code>location_json</code>. Um exemplo dessa estrutura pode ser o seguinte:
+<code>location_json: {"country_code":"us","state":"California","county":"San Francisco","city":"San Francisco"}</code>.
+Dependendo da granularidade dos dados disponíveis, as chaves <code>country_code, state, county ou city</code> podem estar ausentes no <code>location_json</code>.</p>
+<ul>
+    <li>user_location: pode conter um "location_json" conforme descrito acima ou um JSON vazio. Este campo usa os metadados da informação "local" do perfil de um usuário do Twitter e representa a localização declarada do usuário no formato de texto;</li>
+    <li>geo: pode conter um "location_json" conforme descrito acima ou um JSON vazio. Representa o campo "geo" informado pelo Twitter;</li>
+    <li>tweet_locations: este campo pode conter uma matriz de "location_json" conforme descrito acima (<code>[location_json1, location_json2]</code>) ou uma matriz vazia. Este campo usa o conteúdo do <i>tweet</i> (ou seja, a publicação real) para encontrar topônimos. Uma publicação pode ter várias menções a locais diferentes (ou seja, topônimos). É por isso que existe uma variedade de locais representando todos esses topônimos em um <i>tweet</i>. Por exemplo, em um <i>tweet</i> como "O Reino Unido tem mais de 65.000 mortes por #COVID19. Mais do que Qatar, Paquistão e Noruega.", há quatro menções de localização. A matriz <code>tweet_locations</code> deve representar esses quatro separadamente;</li>
+    <li>place: este campo pode conter um "location_json" como descrito acima ou um JSON vazio. Ele representa o campo "lugar" fornecido pelo Twitter.</li>
+</ul><p>Considerando as informações acima, a estratégia adotada para coletar os dados foi encontrar em cada JSON aqueles que possuem o campo <code>geo_source</code> com os valores <code>coordinates</code>, <code>place</code> ou <code>user_location</code>, pois são os valores que indicam com maior precisão a localização de origem da publicação. Em seguida, consideramos o campo <code>user_location</code>. Caso esse campo não seja vazio, procuramos por uma chave <code>country_code</code> que contenha o valor br, uma vez que queremos publicações cujo país de origem seja o Brasil.
+<br/><br/>
+Por fim, adicionamos o JSON que atende às especificações ao conjunto de dados final e excluímos o arquivo que estava sendo analisado, para que um novo possa ser baixado, extraído e analisado, até que todas as datas da lista sejam obtidas. Vamos registrar o tempo necessário para executar todo esse processo.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Iniciando coleta em </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y - %H:%M:%S&quot;</span><span class="p">)))</span>
+<span class="n">tac_geral</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">datas</span><span class="p">:</span>
+    <span class="n">json_final</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="s2">&quot;geo_&quot;</span><span class="o">+</span> <span class="n">data</span> <span class="o">+</span><span class="s2">&quot;.zip&quot;</span>
+    <span class="n">arq</span> <span class="o">=</span> <span class="s2">&quot;geo_&quot;</span><span class="o">+</span> <span class="n">data</span> <span class="o">+</span><span class="s2">&quot;.json&quot;</span>
+    <span class="n">doc_url</span> <span class="o">=</span> <span class="s2">&quot;https://crisisnlp.qcri.org/covid_data/geo_files/&quot;</span><span class="o">+</span> <span class="n">doc</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Baixando arquivo: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">doc</span><span class="p">)</span>
+    <span class="n">tac</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">wget</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">doc_url</span><span class="p">)</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Duração </span><span class="si">%.2f</span><span class="s2"> segundos&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tic</span> <span class="o">-</span> <span class="n">tac</span><span class="p">))</span>
+    
+    <span class="n">tac</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arquivo</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">arquivo</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">arq</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arq_json</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">linha</span> <span class="ow">in</span> <span class="n">arq_json</span><span class="p">:</span>
+                <span class="n">j_linha</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">linha</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">j_linha</span><span class="p">[</span><span class="s1">&#39;geo_source&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;coordinates&#39;</span> <span class="ow">or</span> <span class="n">j_linha</span><span class="p">[</span><span class="s1">&#39;geo_source&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;place&#39;</span> <span class="ow">or</span> <span class="n">j_linha</span><span class="p">[</span><span class="s1">&#39;geo_source&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;user_location&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">j_linha</span><span class="p">[</span><span class="s1">&#39;user_location&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">j_linha</span><span class="p">[</span><span class="s1">&#39;user_location&#39;</span><span class="p">][</span><span class="s1">&#39;country_code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;br&#39;</span><span class="p">:</span> <span class="c1"># Aqui definimos que queremos publicações de origem no Brasil</span>
+                        <span class="n">json_final</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j_linha</span><span class="p">)</span>
+            <span class="n">arq_json</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">arquivo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="n">json_nome</span> <span class="o">=</span> <span class="s2">&quot;geo_json_&quot;</span> <span class="o">+</span> <span class="n">data</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span>
+    <span class="n">caminho_arquivo</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;dados/geo_&#39;</span> <span class="o">+</span> <span class="n">data</span><span class="p">,</span> <span class="n">json_nome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;dados/geo_&#39;</span> <span class="o">+</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;dados/geo_&#39;</span> <span class="o">+</span> <span class="n">data</span><span class="p">)</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">caminho_arquivo</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">arquivo_json</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">json_final</span><span class="p">,</span> <span class="n">arquivo_json</span><span class="p">)</span>
+        <span class="n">arquivo_json</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Duração da coleta dos dados do JSON </span><span class="si">%.2f</span><span class="s2"> segundos&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tic</span> <span class="o">-</span> <span class="n">tac</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Removendo arquivo </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">doc</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erro: </span><span class="si">%s</span><span class="s2"> - arquivo não encontrado&quot;</span> <span class="o">%</span> <span class="n">doc</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---------------------------------&#39;</span><span class="p">)</span>
+    
+<span class="n">tic_geral</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Duração total da coleta </span><span class="si">%.2f</span><span class="s2"> minutos&quot;</span> <span class="o">%</span> <span class="p">((</span><span class="n">tic_geral</span> <span class="o">-</span> <span class="n">tac_geral</span><span class="p">)</span><span class="o">/</span><span class="mi">60</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Coleta finalizada em </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y - %H:%M:%S&quot;</span><span class="p">)))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Iniciando coleta em 12/08/2022 - 14:53:14
+Baixando arquivo: geo_2020-02-19.zip
+Duração 26.33 segundos
+Duração da coleta dos dados do JSON 17.73 segundos
+Removendo arquivo geo_2020-02-19.zip
+---------------------------------
+Baixando arquivo: geo_2020-02-20.zip
+Duração 14.25 segundos
+Duração da coleta dos dados do JSON 13.65 segundos
+Removendo arquivo geo_2020-02-20.zip
+---------------------------------
+Baixando arquivo: geo_2020-02-21.zip
+Duração 28.77 segundos
+Duração da coleta dos dados do JSON 20.52 segundos
+Removendo arquivo geo_2020-02-21.zip
+---------------------------------
+Baixando arquivo: geo_2020-02-22.zip
+Duração 29.16 segundos
+Duração da coleta dos dados do JSON 25.49 segundos
+Removendo arquivo geo_2020-02-22.zip
+---------------------------------
+Baixando arquivo: geo_2020-02-23.zip
+Duração 34.01 segundos
+Duração da coleta dos dados do JSON 29.54 segundos
+Removendo arquivo geo_2020-02-23.zip
+---------------------------------
+Baixando arquivo: geo_2020-02-24.zip
+Duração 44.76 segundos
+Duração da coleta dos dados do JSON 48.89 segundos
+Removendo arquivo geo_2020-02-24.zip
+---------------------------------
+Baixando arquivo: geo_2020-02-25.zip
+Duração 75.23 segundos
+Duração da coleta dos dados do JSON 69.07 segundos
+Removendo arquivo geo_2020-02-25.zip
+---------------------------------
+Baixando arquivo: geo_2020-02-26.zip
+Duração 67.59 segundos
+Duração da coleta dos dados do JSON 101.08 segundos
+Removendo arquivo geo_2020-02-26.zip
+---------------------------------
+Baixando arquivo: geo_2020-02-27.zip
+Duração 69.54 segundos
+Duração da coleta dos dados do JSON 108.65 segundos
+Removendo arquivo geo_2020-02-27.zip
+---------------------------------
+Baixando arquivo: geo_2020-02-28.zip
+Duração 71.04 segundos
+Duração da coleta dos dados do JSON 90.57 segundos
+Removendo arquivo geo_2020-02-28.zip
+---------------------------------
+Baixando arquivo: geo_2020-02-29.zip
+Duração 66.59 segundos
+Duração da coleta dos dados do JSON 79.27 segundos
+Removendo arquivo geo_2020-02-29.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-01.zip
+Duração 78.52 segundos
+Duração da coleta dos dados do JSON 73.15 segundos
+Removendo arquivo geo_2020-03-01.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-02.zip
+Duração 58.38 segundos
+Duração da coleta dos dados do JSON 72.71 segundos
+Removendo arquivo geo_2020-03-02.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-03.zip
+Duração 63.56 segundos
+Duração da coleta dos dados do JSON 68.39 segundos
+Removendo arquivo geo_2020-03-03.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-04.zip
+Duração 52.59 segundos
+Duração da coleta dos dados do JSON 75.65 segundos
+Removendo arquivo geo_2020-03-04.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-05.zip
+Duração 60.61 segundos
+Duração da coleta dos dados do JSON 79.94 segundos
+Removendo arquivo geo_2020-03-05.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-06.zip
+Duração 69.42 segundos
+Duração da coleta dos dados do JSON 78.70 segundos
+Removendo arquivo geo_2020-03-06.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-07.zip
+Duração 78.11 segundos
+Duração da coleta dos dados do JSON 95.55 segundos
+Removendo arquivo geo_2020-03-07.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-08.zip
+Duração 80.37 segundos
+Duração da coleta dos dados do JSON 95.81 segundos
+Removendo arquivo geo_2020-03-08.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-09.zip
+Duração 74.91 segundos
+Duração da coleta dos dados do JSON 113.45 segundos
+Removendo arquivo geo_2020-03-09.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-10.zip
+Duração 83.43 segundos
+Duração da coleta dos dados do JSON 99.77 segundos
+Removendo arquivo geo_2020-03-10.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-11.zip
+Duração 91.34 segundos
+Duração da coleta dos dados do JSON 100.68 segundos
+Removendo arquivo geo_2020-03-11.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-12.zip
+Duração 64.76 segundos
+Duração da coleta dos dados do JSON 132.21 segundos
+Removendo arquivo geo_2020-03-12.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-13.zip
+Duração 136.20 segundos
+Duração da coleta dos dados do JSON 140.36 segundos
+Removendo arquivo geo_2020-03-13.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-14.zip
+Duração 109.49 segundos
+Duração da coleta dos dados do JSON 132.85 segundos
+Removendo arquivo geo_2020-03-14.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-15.zip
+Duração 113.78 segundos
+Duração da coleta dos dados do JSON 146.83 segundos
+Removendo arquivo geo_2020-03-15.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-16.zip
+Duração 106.04 segundos
+Duração da coleta dos dados do JSON 143.49 segundos
+Removendo arquivo geo_2020-03-16.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-17.zip
+Duração 91.31 segundos
+Duração da coleta dos dados do JSON 205.32 segundos
+Removendo arquivo geo_2020-03-17.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-18.zip
+Duração 91.19 segundos
+Duração da coleta dos dados do JSON 134.15 segundos
+Removendo arquivo geo_2020-03-18.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-19.zip
+Duração 99.39 segundos
+Duração da coleta dos dados do JSON 109.64 segundos
+Removendo arquivo geo_2020-03-19.zip
+---------------------------------
+Baixando arquivo: geo_2020-03-20.zip
+Duração 56.68 segundos
+Duração da coleta dos dados do JSON 101.64 segundos
+Removendo arquivo geo_2020-03-20.zip
+---------------------------------
+Duração total da coleta 83.32 minutos
+Coleta finalizada em 12/08/2022 - 16:16:33
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>O processo de coleta levou aproximadamente 1 hora e 24 minutos.
+<br/>
+Vamos criar funções que ajudem a contabilizar o tamanho do conjunto de dados gerados ao final dessa etapa.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">retorna_tamanho_formatado</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">fator</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">sufixo</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">unidade</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">fator</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">b</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}{</span><span class="n">unidade</span><span class="si">}{</span><span class="n">sufixo</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">b</span> <span class="o">/=</span> <span class="n">fator</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">b</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">Y</span><span class="si">{</span><span class="n">sufixo</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="k">def</span> <span class="nf">retorna_tamanho_diretorio</span><span class="p">(</span><span class="n">diretorio</span><span class="p">):</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">elemento</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">scandir</span><span class="p">(</span><span class="n">diretorio</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">elemento</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                <span class="n">total</span> <span class="o">+=</span> <span class="n">elemento</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span>
+            <span class="k">elif</span> <span class="n">elemento</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">total</span> <span class="o">+=</span> <span class="n">retorna_tamanho_diretorio</span><span class="p">(</span><span class="n">elemento</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+    <span class="k">except</span> <span class="ne">NotADirectoryError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">diretorio</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">total</span>
+     
+<span class="n">retorna_tamanho_formatado</span><span class="p">(</span><span class="n">retorna_tamanho_diretorio</span><span class="p">(</span><span class="s2">&quot;dados&quot;</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>&#39;1.40GB&#39;</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>São 1.4GB de dados coletados nesse intervalo.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Tratando-os-dados-coletados">Tratando os dados coletados<a class="anchor-link" href="#Tratando-os-dados-coletados">&#182;</a></h3><hr style="border:1px solid #0077b9;">
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Após a coleta dos dados, o que temos é um conjunto de pastas contendo arquivos JSON com as publicações feitas entre as datas informadas (19/02/2020 e 20/03/2020) e de origem do Brasil. 
+<br><br>
+Vamos concatenar esses arquivos em um único arquivo CSV, para facilitar o carregamento e manipulação dos dados. Para isso, primeiramente vamos definir uma função que vai ser utilizada para a criação de dois campos no conjunto de dados: estado e cidade. Essa função vai iterar pelos dados e extrair do JSON <code>user_location</code> o nome do estado e da cidade de origem da publicação, quando houver.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[40]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">separa_estado_cidade</span><span class="p">(</span><span class="n">user_location</span><span class="p">):</span>
+    <span class="n">estados</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">user_location</span><span class="p">)</span>
+    <span class="n">cidades</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">user_location</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">user_location</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="c1"># quando encontrar uma chave de estado, adiciona ao vetor com os estados</span>
+                <span class="n">estados</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;city&#39;</span><span class="p">:</span> <span class="c1"># quando encontrar uma chave de cidade, adiciona ao vetor com os estados</span>
+                <span class="n">cidades</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+                
+    <span class="k">return</span> <span class="p">(</span><span class="n">estados</span><span class="p">,</span> <span class="n">cidades</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Após a criação da função, é possível iterar pelas pastas e arquivos que foram coletados, removendo do conjunto os campos <code>tweet_id, user_id, geo, place</code> e <code>tweet_locations</code> e gerando os atributos <code>estado</code> e <code>cidade</code>. O arquivo gerado ao final desse tratamento é um CSV com os campos <code>created_at, geo_source, estado</code> e <code>cidade</code>. Vamos registrar o tempo de execução do tratamento desses dados.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[50]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;created_at&#39;</span><span class="p">,</span> <span class="s1">&#39;geo_source&#39;</span><span class="p">,</span> <span class="s1">&#39;estado&#39;</span><span class="p">,</span> <span class="s1">&#39;cidade&#39;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;tweets_covid_brasil.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Iniciando tratamento dos dados em </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y - %H:%M:%S&quot;</span><span class="p">)))</span>
+<span class="n">tac_geral</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">datas</span><span class="p">:</span>
+    
+    <span class="n">json_nome</span> <span class="o">=</span> <span class="s2">&quot;geo_json_&quot;</span> <span class="o">+</span> <span class="n">data</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lendo arquivo </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">json_nome</span><span class="p">)</span>
+    <span class="n">caminho_arquivo</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;dados/geo_&#39;</span> <span class="o">+</span> <span class="n">data</span><span class="p">,</span> <span class="n">json_nome</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">caminho_arquivo</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Arquivo com </span><span class="si">%s</span><span class="s1"> registros&#39;</span> <span class="o">%</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tweet_id&#39;</span><span class="p">,</span> <span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;geo&#39;</span><span class="p">,</span> <span class="s1">&#39;place&#39;</span><span class="p">,</span> <span class="s1">&#39;tweet_locations&#39;</span><span class="p">])</span>
+    <span class="n">estados</span><span class="p">,</span> <span class="n">cidades</span> <span class="o">=</span> <span class="n">separa_estado_cidade</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;user_location&#39;</span><span class="p">])</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;estado&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">estados</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;cidade&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cidades</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;user_location&#39;</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;tweets_covid_brasil.csv&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---------------------------------&#39;</span><span class="p">)</span>
+    
+<span class="n">tic_geral</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Duração total do tratamento: </span><span class="si">%.2f</span><span class="s2"> minutos&quot;</span> <span class="o">%</span> <span class="p">((</span><span class="n">tic_geral</span> <span class="o">-</span> <span class="n">tac_geral</span><span class="p">)</span><span class="o">/</span><span class="mi">60</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tratamento finalizado em </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y - %H:%M:%S&quot;</span><span class="p">)))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Iniciando tratamento dos dados em 12/08/2022 - 21:00:23
+Lendo arquivo geo_json_2020-02-19.json
+Arquivo com 5240 registros
+---------------------------------
+Lendo arquivo geo_json_2020-02-20.json
+Arquivo com 4002 registros
+---------------------------------
+Lendo arquivo geo_json_2020-02-21.json
+Arquivo com 5396 registros
+---------------------------------
+Lendo arquivo geo_json_2020-02-22.json
+Arquivo com 5599 registros
+---------------------------------
+Lendo arquivo geo_json_2020-02-23.json
+Arquivo com 7697 registros
+---------------------------------
+Lendo arquivo geo_json_2020-02-24.json
+Arquivo com 13415 registros
+---------------------------------
+Lendo arquivo geo_json_2020-02-25.json
+Arquivo com 21280 registros
+---------------------------------
+Lendo arquivo geo_json_2020-02-26.json
+Arquivo com 101251 registros
+---------------------------------
+Lendo arquivo geo_json_2020-02-27.json
+Arquivo com 88302 registros
+---------------------------------
+Lendo arquivo geo_json_2020-02-28.json
+Arquivo com 59678 registros
+---------------------------------
+Lendo arquivo geo_json_2020-02-29.json
+Arquivo com 59791 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-01.json
+Arquivo com 67834 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-02.json
+Arquivo com 39231 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-03.json
+Arquivo com 27195 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-04.json
+Arquivo com 29615 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-05.json
+Arquivo com 28444 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-06.json
+Arquivo com 30343 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-07.json
+Arquivo com 30380 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-08.json
+Arquivo com 24577 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-09.json
+Arquivo com 31946 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-10.json
+Arquivo com 38085 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-11.json
+Arquivo com 48017 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-12.json
+Arquivo com 102363 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-13.json
+Arquivo com 152501 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-14.json
+Arquivo com 105891 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-15.json
+Arquivo com 120376 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-16.json
+Arquivo com 136010 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-17.json
+Arquivo com 173003 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-18.json
+Arquivo com 121430 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-19.json
+Arquivo com 103745 registros
+---------------------------------
+Lendo arquivo geo_json_2020-03-20.json
+Arquivo com 80735 registros
+---------------------------------
+Duração total da coleta 6.89 minutos
+Tratamento finalizado em 12/08/2022 - 21:07:17
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>O tratamento levou cerca de 7 minutos. Podemos verificar o tamanho do arquivo CSV gerado (tweets_covid_brasil.csv):</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">retorna_tamanho_formatado</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="s1">&#39;tweets_covid_brasil.csv&#39;</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>&#39;92.75MB&#39;</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Agora, ao invés de manipular 1.4GB de dados, podemos trabalhar com um arquivo relativamente menor.
+<br><br>
+Vamos verificar a quantidade de linhas que o arquivo final possui:</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;tweets_covid_brasil.csv&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;O arquivo final contém </span><span class="si">%s</span><span class="s2"> linhas.&quot;</span> <span class="o">%</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>O arquivo final contém 1863372 linhas.
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Agora temos um arquivo para gerar nossas análises.</p>
 
 </div>
 </div>
